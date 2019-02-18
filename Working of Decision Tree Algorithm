@@ -1,0 +1,24 @@
+#import dataset
+
+mydata <- read.csv("file:///C:/Users/Admin/Downloads/wdbc.csv")
+mydata <- mydata[,-1]
+#data partion
+set.seed(1234)
+pd <- sample(2,nrow(mydata),replace = TRUE,prob = c(0.8,0.2))
+
+train_data <- mydata[pd==1,]
+test_data <- mydata[pd==2,]
+
+# decision tree using rpart
+
+library(rpart)
+tree <- rpart(M~.,train_data)
+library(rpart.plot)
+rpart.plot(tree,extra = 1)
+
+#prediction 
+pred <- predict(tree,train_data,type = "class")
+
+#misclassification error
+library(caret)
+confusionMatrix(pred,train_data$M)
